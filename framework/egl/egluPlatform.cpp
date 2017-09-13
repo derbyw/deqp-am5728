@@ -40,7 +40,8 @@ tcu::FunctionLibrary* Platform::createDefaultGLFunctionLibrary (glu::ApiType api
 {
 	// \todo [2014-03-14 pyry] Do we want to implement tcu::DynamicFunctionLibrary-based fallback?
 	if (apiType.getProfile() == glu::PROFILE_ES)
-		return createStaticESLibrary();
+		return new tcu::DynamicFunctionLibrary("libGLESv2.so");
+		//return createStaticESLibrary();
 	else
 		return new tcu::StaticFunctionLibrary(DE_NULL, 0);
 }
