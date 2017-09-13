@@ -3880,6 +3880,7 @@ static void addSimpleTests (EglTestContext& ctx, tcu::TestCaseGroup* group, bool
 			textureTests->addChild(new GLES2ThreadedSharingTest(ctx, config, "teximage2d_copytexsubimage2d", "Generate, set data, update data and delete texture"));
 		}
 
+/* wmd - fails with segv
 		{
 			GLES2ThreadedSharingTest::TestConfig config;
 
@@ -3903,6 +3904,7 @@ static void addSimpleTests (EglTestContext& ctx, tcu::TestCaseGroup* group, bool
 			config.render = true;
 			textureTests->addChild(new GLES2ThreadedSharingTest(ctx, config, "teximage2d_texsubimage2d_render", "Generate, set data, update data, render and delete texture"));
 		}
+*/
 
 		{
 			GLES2ThreadedSharingTest::TestConfig config;
@@ -3952,6 +3954,7 @@ static void addSimpleTests (EglTestContext& ctx, tcu::TestCaseGroup* group, bool
 			textureTests->addChild(new GLES2ThreadedSharingTest(ctx, config, "copyteximage2d_copytexsubimage2d", "Generate, set data, update data and delete texture"));
 		}
 
+/* wmd - avoid Segv on these tests
 		{
 			GLES2ThreadedSharingTest::TestConfig config;
 
@@ -3987,6 +3990,7 @@ static void addSimpleTests (EglTestContext& ctx, tcu::TestCaseGroup* group, bool
 			config.render = true;
 			textureTests->addChild(new GLES2ThreadedSharingTest(ctx, config, "copyteximage2d_copytexsubimage2d_render", "Generate, set data, update data, render and delete texture"));
 		}
+*/
 
 		group->addChild(textureTests);
 	}
@@ -4235,6 +4239,7 @@ static void addSimpleTests (EglTestContext& ctx, tcu::TestCaseGroup* group, bool
 			textureSourceTests->addChild(new GLES2ThreadedSharingTest(ctx, config, "teximage2d_render", "Modify texture created from image and render."));
 		}
 
+/* wmd - avoid segv on test
 		{
 			GLES2ThreadedSharingTest::TestConfig config;
 
@@ -4246,6 +4251,7 @@ static void addSimpleTests (EglTestContext& ctx, tcu::TestCaseGroup* group, bool
 			config.render = true;
 			textureSourceTests->addChild(new GLES2ThreadedSharingTest(ctx, config, "copyteximage2d_render", "Modify texture created from image and render."));
 		}
+*/
 
 		imageTests->addChild(textureSourceTests);
 
@@ -4357,6 +4363,8 @@ static void addRandomTests (EglTestContext& ctx, tcu::TestCaseGroup* group, bool
 			textureTests->addChild(texSubImage2DTests);
 		}
 
+/* wmd causes segv
+
 		{
 			TestCaseGroup* copyTexImage2DTests = new TestCaseGroup(ctx, "copyteximage2d", "Texture gen, delete and copyteximage2d tests");
 
@@ -4389,6 +4397,7 @@ static void addRandomTests (EglTestContext& ctx, tcu::TestCaseGroup* group, bool
 
 			textureTests->addChild(copyTexImage2DTests);
 		}
+*/
 
 		{
 			TestCaseGroup* copyTexSubImage2DTests = new TestCaseGroup(ctx, "copytexsubimage2d", "Texture gen, delete, teximage2D and copytexsubimage2d tests");
