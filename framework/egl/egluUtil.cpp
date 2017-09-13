@@ -101,6 +101,8 @@ vector<EGLConfig> getConfigs (const Library& egl, EGLDisplay display)
 	EGLint				configCount	= 0;
 	EGLU_CHECK_CALL(egl, getConfigs(display, DE_NULL, 0, &configCount));
 
+	EGLU_CHECK_MSG(egl, "Called getConfigs");
+
 	if (configCount > 0)
 	{
 		configs.resize(configCount);
@@ -234,7 +236,7 @@ EGLDisplay getDisplay (NativeDisplay& nativeDisplay)
 
 	TCU_CHECK_INTERNAL(supportsLegacyGetDisplay || supportsPlatformGetDisplay);
 
-	if (supportsPlatformGetDisplay)
+	if (supportsPlatformGetDisplay && false)
 	{
 		const vector<string> platformExts = getClientExtensions(egl);
 		usePlatformExt = de::contains(platformExts.begin(), platformExts.end(), string("EGL_EXT_platform_base")) &&
