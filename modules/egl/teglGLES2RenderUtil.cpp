@@ -21,6 +21,7 @@
  * \brief GLES2 render utils.
  *//*--------------------------------------------------------------------*/
 
+#include <stdio.h>
 #include "teglGLES2RenderUtil.hpp"
 #include "glwFunctions.hpp"
 #include "glwEnums.hpp"
@@ -34,22 +35,29 @@ namespace gles2
 
 void clear (const glw::Functions& gl, int x, int y, int width, int height, const tcu::Vec4& color)
 {
-	gl.enable(GL_SCISSOR_TEST);
-	gl.scissor(x, y, width, height);
-	gl.clearColor(color.x(), color.y(), color.z(), color.w());
-	gl.clear(GL_COLOR_BUFFER_BIT);
-	gl.disable(GL_SCISSOR_TEST);
+        if (gl.enable != NULL) {
+		gl.enable(GL_SCISSOR_TEST);
+		gl.scissor(x, y, width, height);
+		gl.clearColor(color.x(), color.y(), color.z(), color.w());
+		gl.clear(GL_COLOR_BUFFER_BIT);
+		gl.disable(GL_SCISSOR_TEST);
+	} else fprintf(stdout,"Clear failing - no enable function defined");
+
 }
 
 void readPixels (const glw::Functions& gl, tcu::Surface& dst, int x, int y, int width, int height)
 {
 	dst.setSize(width, height);
-	gl.readPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, dst.getAccess().getDataPtr());
+	if (gl.readPixels != NULL) {
+	   gl.readPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, dst.getAccess().getDataPtr());
+	} else fprintf(stdout,"Clear failing - no readPixels function defined");
 }
 
 void finish (const glw::Functions& gl)
 {
-	gl.finish();
+	if (gl.finish != NULL) {
+		gl.finish();
+	}
 }
 
 } // gles2
