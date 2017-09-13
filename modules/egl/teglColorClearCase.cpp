@@ -188,6 +188,13 @@ void SingleThreadColorClearCase::executeForContexts (EGLDisplay display, EGLSurf
 
 	m_eglTestCtx.initGLFunctions(&funcs.gl, glu::ApiType::es(2,0));
 
+        if (funcs.gl.enable == NULL) {	
+	   EGLU_CHECK_MSG(egl, "initGLFunctions - returned NULL gl functions");
+	   m_testCtx.setTestResult(QP_TEST_RESULT_FAIL, "Image comparison failed - NULL GL function interface.");
+	   return;
+        }
+
+
 	// Clear to black using first context.
 	{
 		EGLint		api			= contexts[0].first;
