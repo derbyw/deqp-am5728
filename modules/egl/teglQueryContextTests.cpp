@@ -389,6 +389,7 @@ void createQueryContextGroups (EglTestContext& eglTestCtx, tcu::TestCaseGroup* g
 
 void QueryContextTests::init (void)
 {
+/*
 	{
 		tcu::TestCaseGroup* simpleGroup = new tcu::TestCaseGroup(m_testCtx, "simple", "Simple API tests");
 		addChild(simpleGroup);
@@ -403,6 +404,7 @@ void QueryContextTests::init (void)
 
 		createQueryContextGroups<GetCurrentContextCase>(m_eglTestCtx, getCurrentContextGroup);
 	}
+*/
 
 	// eglGetCurrentSurface
 	{
@@ -412,6 +414,7 @@ void QueryContextTests::init (void)
 		createQueryContextGroups<GetCurrentSurfaceCase>(m_eglTestCtx, getCurrentSurfaceGroup);
 	}
 
+/*
 	// eglGetCurrentDisplay
 	{
 		tcu::TestCaseGroup* getCurrentDisplayGroup = new tcu::TestCaseGroup(m_testCtx, "get_current_display", "eglGetCurrentDisplay() tests");
@@ -427,6 +430,7 @@ void QueryContextTests::init (void)
 
 		createQueryContextGroups<QueryContextCase>(m_eglTestCtx, queryContextGroup);
 	}
+*/
 }
 
 } // egl
