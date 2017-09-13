@@ -21,6 +21,8 @@
  * \brief Function table initialization.
  *//*--------------------------------------------------------------------*/
 
+#include <stdio.h>
+#include "GLES2/gl2.h"
 #include "glwInitFunctions.hpp"
 #include "deSTLUtil.hpp"
 
@@ -32,10 +34,65 @@ namespace glw
 
 // \todo [2014-03-19 pyry] Replace this with more generic system based on upstream XML spec desc.
 
+
+// hold on to actual readpixel so we can hijack it.
+void (*saved_readpixel)(GLint x, GLint y, GLsizei width, GLsizei height,
+				 GLenum format, GLenum datatype, GLvoid *data);
+
+
+// hold on to the glGetError function as well..
+unsigned int (*glGetError)();
+void (*glGetIntegerv)(GLenum pname, GLint *params);
+void (*glPixelStorei)(GLenum pname, GLint params);
+
+/*
+ * insert stub into read pixel to see why its failing
+ */
+void MyReadPixel(GLint x, GLint y, GLsizei width, GLsizei height,
+				 GLenum format, GLenum datatype, GLvoid *data)
+
+{
+	GLenum err;
+	GLint  readbuf_format;
+	GLint  readbuf_type;
+
+	fprintf(stderr,"readpixel called %d %d w %d h %d format 0x%X type 0x%X\n",x,y,width,height,format,datatype);
+
+	glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_FORMAT, &readbuf_format);
+	glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_TYPE, &readbuf_type);
+	glPixelStorei(GL_PACK_ALIGNMENT, 4);  // shoudl be default...
+
+	fprintf(stderr,"readpixel supports format 0x%X and type 0x%X\n",readbuf_format, readbuf_type);
+	
+	while((err = (*glGetError)()) != GL_NO_ERROR) {
+ 		fprintf(stderr,"Flushing GL Errors  0x%X\n",err);
+	}
+
+
+	(*saved_readpixel)(x,y,width,height,format,datatype, data);
+	fprintf(stderr,"post readpixel errors....\n");
+	while((err = (*glGetError)()) != GL_NO_ERROR) {
+ 		fprintf(stderr,"ReadPixel GL Error  0x%X\n",err);
+	}
+} 
+
 void initES20 (Functions* gl, const FunctionLoader* loader)
 {
 #include "glwInitES20.inl"
+
+    glGetError = (unsigned int (*)())gl->getError;
+
+    // stick in a middle man to see whats going on
+    glGetIntegerv = (void (*)(GLenum, GLint *))gl->getIntegerv;
+    glPixelStorei = (void (*)(GLenum, GLint))gl->pixelStorei;
+
+    saved_readpixel = gl->readPixels;
+    gl->readPixels = &MyReadPixel;
+
+
 }
+
+
 
 void initES30 (Functions* gl, const FunctionLoader* loader)
 {
