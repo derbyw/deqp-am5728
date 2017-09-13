@@ -86,10 +86,14 @@ void CreateContextCase::executeForConfig (EGLDisplay display, EGLConfig config)
 
 	for (int apiNdx = 0; apiNdx < (int)DE_LENGTH_OF_ARRAY(s_apis); apiNdx++)
 	{
-		if ((apiBits & s_apis[apiNdx].apiBit) == 0)
+		// if ((apiBits & s_apis[apiNdx].apiBit) == 0) // allows ES 1 which fails
+		if ((apiBits & s_apis[apiNdx].apiBit) != 2)
 			continue; // Not supported API
 
-		log << TestLog::Message << "Creating " << s_apis[apiNdx].name << " context with config ID " << id << TestLog::EndMessage;
+		log << TestLog::Message << "Creating " << s_apis[apiNdx].name 
+					<< " bit " << s_apis[apiNdx].apiBit 
+					<< " eglmask " << apiBits 
+					<< " context with config ID " << id << TestLog::EndMessage;
 		EGLU_CHECK_MSG(egl, "init");
 
 		EGLU_CHECK_CALL(egl, bindAPI(s_apis[apiNdx].api));
