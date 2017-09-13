@@ -21,6 +21,7 @@
  * \brief glw::FunctionLoader using eglGetProcAddress() and tcu::Library.
  *//*--------------------------------------------------------------------*/
 
+#include <stdio.h>
 #include "egluGLFunctionLoader.hpp"
 #include "egluPlatform.hpp"
 #include "eglwLibrary.hpp"
@@ -39,10 +40,15 @@ glw::GenericFuncType GLFunctionLoader::get (const char* name) const
 {
 	glw::GenericFuncType func = (glw::GenericFuncType)m_library->getFunction(name);
 
-	if (!func)
-		return (glw::GenericFuncType)m_egl.getProcAddress(name);
-	else
-		return func;
+	if (!func) {
+		// this is a fallback/hail mary the GL functions should not be found in the EGL library
+	     func = (glw::GenericFuncType)m_egl.getProcAddress(name);
+	     if (! func) { // Undefined GL Function!!!!
+		fprintf(stderr,"Failed to find and load GL function : %s\n",name);
+	     }
+	} 
+
+	return func;
 }
 
 GLLibraryCache::GLLibraryCache (const Platform& platform, const tcu::CommandLine& cmdLine)
